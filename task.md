@@ -16,3 +16,6 @@
     - [x] Implementera Global Hotkey (för snabb-aktivering) <!-- id: 13 -->
 - [x] Förberedelse för AI (Framtida) <!-- id: 14 -->
     - [x] Definiera interface `IAiSummarizer` <!-- id: 15 -->
+- [x] Implementation - Settings <!-- id: 16 -->
+    - [x] Skapa `ISettingsService` <!-- id: 17 -->
+    - [x] Integrera hastighetsinställning i `AudioService` <!-- id: 18 -->

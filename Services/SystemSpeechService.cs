@@ -10,11 +10,13 @@ namespace SpeakEasy.Services
     public class SystemSpeechService : IAudioService
     {
         private readonly SpeechSynthesizer _synthesizer;
+        private readonly ISettingsService _settingsService;
         private TaskCompletionSource<bool>? _tcs;
         private Prompt? _currentPrompt;
 
-        public SystemSpeechService()
+        public SystemSpeechService(ISettingsService settingsService)
         {
+            _settingsService = settingsService;
             _synthesizer = new SpeechSynthesizer();
             _synthesizer.SetOutputToDefaultAudioDevice();
             _synthesizer.SpeakCompleted += OnSpeakCompleted;
@@ -27,7 +29,7 @@ namespace SpeakEasy.Services
 
             _tcs = new TaskCompletionSource<bool>();
             
-            _synthesizer.Rate = 0; // Normal speed
+            _synthesizer.Rate = _settingsService.SpeechRate; // Use rate from settings
 
             // Try to select a voice that matches the requested culture
             var voice = _synthesizer.GetInstalledVoices()

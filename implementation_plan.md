@@ -55,6 +55,13 @@ SpeakEasy/
     - Metod: `Speak(string text, string cultureCode)` - Väljer en röst som matchar `cultureCode` (t.ex. "sv-SE" eller "en-US"), annars fallback till systemrösten.
     - Metod: `Stop()` - Avbryter läsning.
 
+#### [Settings] (`/Services`)
+- **[NEW] `SettingsService`**:
+    - Hanterar applikationsinställningar.
+    - `SpeechRate`: Default 2 (ca 120%).
+    - `SpeechVolume`: Default 100.
+    - Redo för Save/Load-implementation.
+
 #### [UI] (`/UI`)
 - **[NEW] `TrayIconManager`**:
     - Ansvarar för ikonen i aktivitetsfältet.

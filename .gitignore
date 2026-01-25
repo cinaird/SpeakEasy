@@ -28,3 +28,6 @@ Desktop.ini
 
 # Dotnet tooling
 *.dotnet/
+
+# Local publish output
+publish/
