@@ -69,7 +69,7 @@ SpeakEasy/
 
 ## Stage Plan
 
-### Stage 1: MVP (Copy + Read Aloud)
+### Stage 1: MVP (Copy + Read Aloud) - **(COMPLETED)**
 **Mål:** Minsta funktionalitet för att läsa upp text från urklipp på begäran.
 - Tray-ikon med menyval för "Läs upp (Svenska/Engelska)".
 - Hämta text från urklipp (endast plain text).

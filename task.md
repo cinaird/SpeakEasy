@@ -6,7 +6,7 @@
 - [x] Setup <!-- id: 3 -->
     - [x] Initiera .NET 8 WPF projekt <!-- id: 4 -->
     - [x] Sätt upp grundläggande mappstruktur <!-- id: 5 -->
-- [/] Implementation - MVP (Text-till-Tal) <!-- id: 6 -->
+- [x] Implementation - MVP (Text-till-Tal) <!-- id: 6 -->
     - [x] Implementera System Tray-ikon (NotifyIcon) <!-- id: 7 -->
     - [x] Skapa `ClipboardService` för att läsa urklipp <!-- id: 8 -->
     - [x] Skapa `AudioService` (Stöd för val av röst: SV/EN) <!-- id: 9 -->

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SpeakEasy.Core.Interfaces;
@@ -27,9 +28,11 @@ namespace SpeakEasy.UI.TrayIcon
 
             InitializeHotkeys();
 
+            var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "speakeasy.ico");
+
             _notifyIcon = new NotifyIcon
             {
-                Icon = SystemIcons.Application, // Placeholder icon
+                Icon = File.Exists(iconPath) ? new Icon(iconPath) : SystemIcons.Information,
                 Visible = true,
                 Text = "SpeakEasy"
             };
