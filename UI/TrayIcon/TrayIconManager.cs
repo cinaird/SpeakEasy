@@ -18,6 +18,7 @@ namespace SpeakEasy.UI.TrayIcon
 
         private const int ID_HOTKEY_SV = 1;
         private const int ID_HOTKEY_EN = 2;
+        private const int ID_HOTKEY_STOP = 3;
 
         public TrayIconManager()
         {
@@ -47,13 +48,17 @@ namespace SpeakEasy.UI.TrayIcon
         {
             _hotkeyService.HotkeyPressed += OnHotkeyPressed;
 
-            // Register Win+Shift+S (Swedish)
-            // S = 0x53 (83)
-            _hotkeyService.Register(ID_HOTKEY_SV, Core.Interfaces.ModifierKeys.Win | Core.Interfaces.ModifierKeys.Shift, 0x53);
+            // Register Ctrl+Alt+S (Swedish)
+            // S = 0x53 (83), Modifiers: Alt(1) | Ctrl(2) = 3
+            _hotkeyService.Register(ID_HOTKEY_SV, Core.Interfaces.ModifierKeys.Alt | Core.Interfaces.ModifierKeys.Control, 0x53);
 
-            // Register Win+Shift+E (English)
+            // Register Ctrl+Alt+E (English)
             // E = 0x45 (69)
-            _hotkeyService.Register(ID_HOTKEY_EN, Core.Interfaces.ModifierKeys.Win | Core.Interfaces.ModifierKeys.Shift, 0x45);
+            _hotkeyService.Register(ID_HOTKEY_EN, Core.Interfaces.ModifierKeys.Alt | Core.Interfaces.ModifierKeys.Control, 0x45);
+
+            // Register Ctrl+Alt+A (Avbryt/Abort)
+            // A = 0x41 (65)
+            _hotkeyService.Register(ID_HOTKEY_STOP, Core.Interfaces.ModifierKeys.Alt | Core.Interfaces.ModifierKeys.Control, 0x41);
         }
 
         private async void OnHotkeyPressed(object? sender, int id)
@@ -66,21 +71,28 @@ namespace SpeakEasy.UI.TrayIcon
                 case ID_HOTKEY_EN:
                     await SpeakTextAsync("en-US");
                     break;
+                case ID_HOTKEY_STOP:
+                    _audioService.Stop();
+                    break;
             }
         }
 
         private async Task SpeakTextAsync(string cultureCode)
         {
             var text = _clipboardService.GetText();
-            if (string.IsNullOrWhiteSpace(text))
+            // SpeakAsync handles stopping previous speech internally and we ignore duplicates/cancellations
+            try
             {
-                _notifyIcon.ShowBalloonTip(3000, "SpeakEasy", "Urklipp är tomt!", ToolTipIcon.Warning);
-                return;
+                await _audioService.SpeakAsync(text, cultureCode);
             }
-
-            // Stop any current speech before starting new
-            _audioService.Stop();
-            await _audioService.SpeakAsync(text, cultureCode);
+            catch (TaskCanceledException)
+            {
+                // Ignore
+            }
+            catch (Exception ex)
+            {
+                 _notifyIcon.ShowBalloonTip(3000, "SpeakEasy", $"Fel: {ex.Message}", ToolTipIcon.Error);
+            }
         }
 
         private ContextMenuStrip CreateContextMenu()
@@ -90,17 +102,20 @@ namespace SpeakEasy.UI.TrayIcon
             var itemSv = new ToolStripMenuItem("Läs upp (Svenska)");
             itemSv.Click += async (s, e) => await SpeakTextAsync("sv-SE");
             
-            var itemSvShortcut = new ToolStripMenuItem("Win+Shift+S") { Enabled = false };
+            var itemSvShortcut = new ToolStripMenuItem("Ctrl+Alt+S") { Enabled = false };
             itemSv.DropDownItems.Add(itemSvShortcut);
             
             var itemEn = new ToolStripMenuItem("Läs upp (Engelska)");
             itemEn.Click += async (s, e) => await SpeakTextAsync("en-US");
 
-            var itemEnShortcut = new ToolStripMenuItem("Win+Shift+E") { Enabled = false };
+            var itemEnShortcut = new ToolStripMenuItem("Ctrl+Alt+E") { Enabled = false };
             itemEn.DropDownItems.Add(itemEnShortcut);
 
             var itemStop = new ToolStripMenuItem("Pausa/Stoppa");
             itemStop.Click += (s, e) => _audioService.Stop();
+            
+            var itemStopShortcut = new ToolStripMenuItem("Ctrl+Alt+A") { Enabled = false };
+            itemStop.DropDownItems.Add(itemStopShortcut);
 
             var itemExit = new ToolStripMenuItem("Avsluta");
             itemExit.Click += (s, e) =>

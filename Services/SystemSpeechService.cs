@@ -11,6 +11,7 @@ namespace SpeakEasy.Services
     {
         private readonly SpeechSynthesizer _synthesizer;
         private TaskCompletionSource<bool>? _tcs;
+        private Prompt? _currentPrompt;
 
         public SystemSpeechService()
         {
@@ -25,7 +26,7 @@ namespace SpeakEasy.Services
             Stop();
 
             _tcs = new TaskCompletionSource<bool>();
-
+            
             _synthesizer.Rate = 0; // Normal speed
 
             // Try to select a voice that matches the requested culture
@@ -38,34 +39,36 @@ namespace SpeakEasy.Services
                 _synthesizer.SelectVoice(voice.VoiceInfo.Name);
             }
 
-            // Use native async method
-            _synthesizer.SpeakAsync(text);
+            // SpeakAsync returns a Prompt object which identifies this specific speech operation
+            _currentPrompt = _synthesizer.SpeakAsync(text);
 
             return _tcs.Task;
         }
 
         public void Stop()
         {
-            // This will trigger OnSpeakCompleted with Cancelled set to true
             _synthesizer.SpeakAsyncCancelAll();
-            
-            // Ensure the previous task is marked as cancelled/completed if it hasn't already
             _tcs?.TrySetCanceled();
+            // _currentPrompt will be effectively invalidated by the cancel
         }
 
         private void OnSpeakCompleted(object? sender, SpeakCompletedEventArgs e)
         {
-            if (e.Cancelled)
+            // Check if this event belongs to the current prompt
+            if (_tcs != null && _currentPrompt != null && e.Prompt == _currentPrompt)
             {
-                _tcs?.TrySetCanceled();
-            }
-            else if (e.Error != null)
-            {
-                _tcs?.TrySetException(e.Error);
-            }
-            else
-            {
-                _tcs?.TrySetResult(true);
+                if (e.Cancelled)
+                {
+                    _tcs.TrySetCanceled();
+                }
+                else if (e.Error != null)
+                {
+                    _tcs.TrySetException(e.Error);
+                }
+                else
+                {
+                    _tcs.TrySetResult(true);
+                }
             }
         }
     }
