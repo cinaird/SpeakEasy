@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakEasy", "SpeakEasy.csproj", "{1317C52A-6777-FF35-609F-6D4718DF006A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1317C52A-6777-FF35-609F-6D4718DF006A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1317C52A-6777-FF35-609F-6D4718DF006A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1317C52A-6777-FF35-609F-6D4718DF006A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1317C52A-6777-FF35-609F-6D4718DF006A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {809F13FF-DF29-4310-BD72-887BEB3D50AD}
+	EndGlobalSection
+EndGlobal
