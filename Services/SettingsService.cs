@@ -6,8 +6,8 @@ namespace SpeakEasy.Services
     {
         // SpeechSynthesizer Rate range is -10 to 10.
         // 0 is normal speed. 
-        // We set 2 as a default to approximate "120%" or "slightly faster".
-        public int SpeechRate { get; set; } = 2; 
+        // We set 4 as a default to be noticeably faster than normal.
+        public int SpeechRate { get; set; } = 4; 
         
         public int SpeechVolume { get; set; } = 100;
 
