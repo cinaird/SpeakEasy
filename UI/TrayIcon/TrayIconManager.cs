@@ -25,7 +25,7 @@ namespace SpeakEasy.UI.TrayIcon
             // Simple manual dependency injection for now
             _clipboardService = new WindowsClipboardService();
             var settingsService = new SettingsService();
-            _audioService = new SystemSpeechService(settingsService);
+            _audioService = new HybridSpeechService(settingsService);
             _hotkeyService = new GlobalHotkeyService();
 
             InitializeHotkeys();

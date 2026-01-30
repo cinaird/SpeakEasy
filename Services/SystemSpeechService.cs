@@ -27,14 +27,17 @@ namespace SpeakEasy.Services
             // Cancel any existing operation first
             Stop();
 
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return Task.CompletedTask;
+            }
+
             _tcs = new TaskCompletionSource<bool>();
             
             _synthesizer.Rate = _settingsService.SpeechRate; // Use rate from settings
 
             // Try to select a voice that matches the requested culture
-            var voice = _synthesizer.GetInstalledVoices()
-                .FirstOrDefault(v => v.VoiceInfo.Culture.Name.Equals(cultureCode, StringComparison.OrdinalIgnoreCase) ||
-                                     v.VoiceInfo.Culture.TwoLetterISOLanguageName.Equals(cultureCode.Substring(0, 2), StringComparison.OrdinalIgnoreCase));
+            var voice = FindMatchingVoice(cultureCode);
 
             if (voice != null)
             {
@@ -45,6 +48,26 @@ namespace SpeakEasy.Services
             _currentPrompt = _synthesizer.SpeakAsync(text);
 
             return _tcs.Task;
+        }
+
+        public bool HasVoiceForCulture(string cultureCode)
+        {
+            return FindMatchingVoice(cultureCode) != null;
+        }
+
+        private InstalledVoice? FindMatchingVoice(string cultureCode)
+        {
+            if (string.IsNullOrWhiteSpace(cultureCode))
+            {
+                return null;
+            }
+
+            var languagePrefix = cultureCode.Length >= 2 ? cultureCode.Substring(0, 2) : cultureCode;
+
+            return _synthesizer.GetInstalledVoices()
+                .FirstOrDefault(v =>
+                    v.VoiceInfo.Culture.Name.Equals(cultureCode, StringComparison.OrdinalIgnoreCase) ||
+                    v.VoiceInfo.Culture.TwoLetterISOLanguageName.Equals(languagePrefix, StringComparison.OrdinalIgnoreCase));
         }
 
         public void Stop()
