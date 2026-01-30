@@ -6,8 +6,9 @@ SpeakEasy is a small Windows tray app that reads your clipboard text aloud using
 - Runs in the system tray (no main window).
 - Speaks clipboard text in Swedish or English.
 - Global hotkeys:
-  - Win+Shift+S = Swedish
-  - Win+Shift+E = English
+  - Ctrl+Alt+S = Swedish
+  - Ctrl+Alt+E = English
+  - Ctrl+Alt+A = Stop/Pause
 
 **Install (Windows 10/11, auto-start at logon)**
 1) Open PowerShell in the repo folder.
